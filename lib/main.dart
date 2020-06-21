@@ -45,7 +45,7 @@ class WaitingRoom extends StatefulWidget {
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-  String studentId = '17103348';
+  String studentId = '17103378';
   String currentClass = '10';
   @override
   void initState() {
@@ -98,10 +98,11 @@ class _WaitingRoomState extends State<WaitingRoom> {
                   }
                 }
                 if (position == 1) {
-                   Navigator.push(context, MaterialPageRoute(builder:(context)=> Meeting() ));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Meeting()));
                 }
                 return Center(child: Text(position.toString()));
-              }else{
+              } else {
                 return Text('loading');
               }
             }));
@@ -257,28 +258,7 @@ class _MeetingState extends State<Meeting> {
                   height: 64.0,
                   width: double.maxFinite,
                   child: RaisedButton(
-                    onPressed: () async {
-                      var data = await Firestore.instance
-                          .collection('lobby')
-                          .document('10')
-                          .get();
-                      print('------');
-                      List<String> details = [];
-                      for (int i = 1; i < data['waiting room'].length; i++) {
-                        details.add(data['waiting room'].elementAt(i));
-                      }
-                      Firestore.instance
-                          .collection('lobby')
-                          .document('10')
-                          .setData({'waiting room': details});
-                      print('-----------11');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
-
-                      print('-----------1111');
-                    },
+                    onPressed: () async {},
                     child: Text(
                       "Leave Meeting",
                       style: TextStyle(color: Colors.white),
@@ -370,8 +350,26 @@ class _MeetingState extends State<Meeting> {
     debugPrint("_onConferenceJoined broadcasted with message: $message");
   }
 
-  void _onConferenceTerminated({message}) {
-    debugPrint("_onConferenceTerminated broadcasted with message: $message");
+  void _onConferenceTerminated({message}) async {
+    print('----------------------1-1--1------');
+    var data =
+        await Firestore.instance.collection('lobby').document('10').get();
+    print('------');
+    List<String> details = [];
+    for (int i = 1; i < data['waiting room'].length; i++) {
+      details.add(data['waiting room'].elementAt(i));
+    }
+    Firestore.instance
+        .collection('lobby')
+        .document('10')
+        .setData({'waiting room': details});
+    print('-----------11');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
+
+    print('-----------1111');
   }
 
   _onError(error) {
